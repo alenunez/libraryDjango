@@ -5,6 +5,8 @@ from django.views.generic.detail import DetailView
 
 from .models import Author
 from .forms import AuthorForm
+from.models import Book
+from .forms import bookForm
 
 # Create your views here.
 def index(request):
@@ -73,3 +75,67 @@ def delete_view(request, id):
         return redirect('autores')
     
     return render(request, "autores/delete_view.html", context)
+
+#--------------------------------------------
+#Vista para listar libros
+def listarLibros(request):
+    lista = Book.objects.all()
+    a = "hola mundo"
+    context = {'lista':lista,'a':a,}
+    template = loader.get_template('libros/libros.html')
+    return HttpResponse(template.render(context,request))
+
+#Vista para ver detalles de un libro
+def detail_view(request, id):
+    context = {}
+
+    context['object'] = Book.objects.get(id = id)
+
+    return render(request,'libros/libro_detalle.html',context)
+
+#vista para crear libros.
+def create_libro(request):
+
+    context = {}
+
+    form = bookForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+        return redirect('libros')
+    
+    context['form'] = form
+    return render(request,'libros/create_libro.html', context)
+
+#vista para actualizar libros
+#Referencia https://www.geeksforgeeks.org/django-crud-create-retrieve-update-delete-function-based-views/?ref=lbp
+def update_libro(request,id):
+
+    context = {}
+
+    obj = get_object_or_404(Book, id = id)
+
+    #formulario que contendra la instancia
+    form = bookForm(request.POST or None, instance = obj)
+
+    if form.is_valid():
+        form.save()
+        return redirect('libros')
+    
+    context['form'] = form
+
+    return render(request, "libros/update_view.html", context)
+
+
+#Vista para eliminar un libro
+def delete_view(request, id):
+
+    context = {}
+
+    obj = get_object_or_404(Book, id = id)
+
+    if request.method == "POST":
+        obj.delete()
+        return redirect('libros')
+    
+    return render(request, "libros/delete_view.html", context)
+
