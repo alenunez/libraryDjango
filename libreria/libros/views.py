@@ -76,17 +76,17 @@ def delete_view(request, id):
     
     return render(request, "autores/delete_view.html", context)
 
-#--------------------------------------------
+#------------------------------------------------------------------
 #Vista para listar libros
 def listarLibros(request):
-    lista = Book.objects.all()
-    a = "hola mundo"
-    context = {'lista':lista,'a':a,}
+    lista1 = Book.objects.all()
+    a1= "hola mundo"
+    context = {'lista1':lista1,'a1':a1,}
     template = loader.get_template('libros/libros.html')
     return HttpResponse(template.render(context,request))
 
 #Vista para ver detalles de un libro
-def detail_view(request, id):
+def detail_viewBook(request, id):
     context = {}
 
     context['object'] = Book.objects.get(id = id)
@@ -123,11 +123,11 @@ def update_libro(request,id):
     
     context['form'] = form
 
-    return render(request, "libros/update_view.html", context)
+    return render(request, "libros/update_viewLibro.html", context)
 
 
 #Vista para eliminar un libro
-def delete_view(request, id):
+def delete_viewBook(request, id):
 
     context = {}
 
@@ -137,5 +137,5 @@ def delete_view(request, id):
         obj.delete()
         return redirect('libros')
     
-    return render(request, "libros/delete_view.html", context)
+    return render(request, "libros/delete_libro.html", context)
 
